@@ -101,40 +101,40 @@ services:
         - swarm.cronjob.schedule=0 3 * * *
         - swarm.cronjob.skip-running=true
 
-  filer_MASTER-SWARM:
+  filer_TIERRA:
     <<: *filer
     deploy:
       placement:
         constraints:
-          - "node.hostname == MASTER-SWARM"
-  filer_NODE1-SWARM:
+          - "node.hostname == TIERRA"
+  filer_MERCURIO:
     <<: *filer
     deploy:
       placement:
         constraints:
-          - "node.hostname == NODE1-SWARM"
-  filer_NODE3-SWARM:
+          - "node.hostname == MERCURIO"
+  filer_VENUS:
     <<: *filer
     deploy:
       placement:
         constraints:
-          - "node.hostname == NODE3-SWARM"
+          - "node.hostname == VENUS"
 
-  volume_MASTER-SWARM:
+  volume_TIERRA:
     <<: *volume
     deploy:
       placement:
         constraints:
-          - "node.hostname == MASTER-SWARM"
-  volume_NODE1-SWARM:
+          - "node.hostname == TIERRA"
+  volume_MERCURIO:
     <<: *volume
     deploy:
       placement:
         constraints:
-          - "node.hostname == NODE1-SWARM"
-  volume_NODE3-SWARM:
+          - "node.hostname == MERCURIO"
+  volume_VENUS:
     <<: *volume
     deploy:
       placement:
         constraints:
-          - "node.hostname == NODE3-SWARM"
+          - "node.hostname == VENUS"

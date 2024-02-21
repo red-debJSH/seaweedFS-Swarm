@@ -4,9 +4,9 @@ cch=/mnt/cch
 mnt=/mnt/cld
 cnt_name=seaweedfs_mount_"$HOST"
 
-filer1=MASTER-SWARM
-filer2=NODE1-SWARM
-filer3=NODE3-SWARM
+filer1=TIERRA
+filer2=MERCURIO
+filer3=VENUS
 
 # prefer connecting to filer on the same node, with the other filers as fallback
 case $HOST in
