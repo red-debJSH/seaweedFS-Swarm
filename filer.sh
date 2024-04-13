@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # prefer writing to volume server on the same node
-volume_hosts="TIERRA MERCURIO VENUS"
+volume_hosts="tierra mercurio venus"
 if [ "${volume_hosts#*"$HOST"}" != "$volume_hosts" ]; then
 	dc=$HOST
 else
-	dc=MERCURIO # default value if no volume server exists on the same node
+	dc=mercurio # default value if no volume server exists on the same node
 fi
 
 cat > /etc/seaweedfs/filer.toml <<- EOF

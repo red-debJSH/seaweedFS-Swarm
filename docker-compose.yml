@@ -1,7 +1,7 @@
 version: "3.9"
 
 networks:
-  public:
+  seaweedfs:
     external: true
 
 configs:
@@ -18,9 +18,9 @@ x-filer: &filer
     - HOST={{.Node.Hostname}}
   entrypoint: /filer.sh
   networks:
-    - public
+    - seaweedfs
   volumes:
-    - /mnt/seaweedfs/filer:/data/filerdb
+    - /mnt/seaweedfs/seaweedfs/filer:/data/filerdb
   configs:
     - source: filer
       target: /filer.sh
@@ -32,9 +32,9 @@ x-volume: &volume
     - HOST={{.Node.Hostname}}
   entrypoint: /volume.sh
   networks:
-    - public
+    - seaweedfs
   volumes:
-    - /mnt/seaweedfs/volume:/data
+    - /mnt/seaweedfs/seaweedfs/volume:/data
   configs:
     - source: volume
       target: /volume.sh
@@ -46,13 +46,13 @@ services:
     command: 
       - "master"
       - "-defaultReplication=200"
-      - "-volumeSizeLimitMB=1024"
+      - "-volumeSizeLimitMB=408576"
       - "-garbageThreshold=0.01"
       - "-mdir=/data"
     networks:
-      - public
+      - seaweedfs
     volumes:
-      - /mnt/seaweedfs/master:/data
+      - /mnt/seaweedfs/seaweedfs/master:/data
     deploy:
       placement:
         max_replicas_per_node: 1
@@ -62,11 +62,11 @@ services:
     cap_add: 
       - SYS_ADMIN
     networks:
-      - public
+      - seaweedfs
     environment:
       - HOST={{.Node.Hostname}}
     volumes:
-      - /mnt:/mnt:rshared
+      - /mnt/seaweedfs:/mnt:rshared
       - /var/run/docker.sock:/var/run/docker.sock:ro
     entrypoint: /mount.sh
     init: true
@@ -78,14 +78,14 @@ services:
     deploy:
       mode: global
 
-  cron: # depends on https://github.com/crazy-max/swarm-cronjob/
+  cron: 
     image: chrislusf/seaweedfs:latest
     networks:
-      - public
+      - seaweedfs
     environment:
       SHELL_MASTER: seaweedfs_master:9333
     volumes:
-      - /mnt/seaweedfs/metabackup:/data
+      - /mnt/seaweedfs/seaweedfs/metabackup:/data
     command: 
       - "shell"
       - "lock;"
@@ -101,40 +101,40 @@ services:
         - swarm.cronjob.schedule=0 3 * * *
         - swarm.cronjob.skip-running=true
 
-  filer_TIERRA:
+  filer_tierra:
     <<: *filer
     deploy:
       placement:
         constraints:
-          - "node.hostname == TIERRA"
-  filer_MERCURIO:
+          - "node.hostname == tierra"
+  filer_mercurio:
     <<: *filer
     deploy:
       placement:
         constraints:
-          - "node.hostname == MERCURIO"
-  filer_VENUS:
+          - "node.hostname == mercurio"
+  filer_venus:
     <<: *filer
     deploy:
       placement:
         constraints:
-          - "node.hostname == VENUS"
+          - "node.hostname == venus"
 
-  volume_TIERRA:
+  volume_tierra:
     <<: *volume
     deploy:
       placement:
         constraints:
-          - "node.hostname == TIERRA"
-  volume_MERCURIO:
+          - "node.hostname == tierra"
+  volume_mercurio:
     <<: *volume
     deploy:
       placement:
         constraints:
-          - "node.hostname == MERCURIO"
-  volume_VENUS:
+          - "node.hostname == mercurio"
+  volume_venus:
     <<: *volume
     deploy:
       placement:
         constraints:
-          - "node.hostname == VENUS"
+          - "node.hostname == venus"

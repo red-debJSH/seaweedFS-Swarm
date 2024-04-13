@@ -4,9 +4,9 @@ cch=/mnt/cch
 mnt=/mnt/cld
 cnt_name=seaweedfs_mount_"$HOST"
 
-filer1=TIERRA
-filer2=MERCURIO
-filer3=VENUS
+filer1=tierra
+filer2=mercurio
+filer3=venus
 
 # prefer connecting to filer on the same node, with the other filers as fallback
 case $HOST in
@@ -46,11 +46,11 @@ cleanup
 docker run \
 	--rm \
 	--name="$cnt_name" \
-	--net=public \
+	--net=seaweedfs \
 	--cap-add SYS_ADMIN \
 	--security-opt apparmor:unconfined \
 	--device /dev/fuse \
-	-v /mnt:/mnt:rshared \
+	-v /mnt/seaweedfs:/mnt:rshared \
 	chrislusf/seaweedfs \
 		mount \
 		-dir="$mnt" \
