@@ -3,26 +3,7 @@
 cch=/mnt/cch
 mnt=/mnt/cld
 cnt_name=seaweedfs_mount_"$HOST"
-
-filer1=tierra
-filer2=mercurio
-filer3=venus
-
-# prefer connecting to filer on the same node, with the other filers as fallback
-case $HOST in
-	"$filer1")
-		filer=seaweedfs_filer_"$filer1":8888,seaweedfs_filer_"$filer2":8888,seaweedfs_filer_"$filer3":8888
-		;;
-	"$filer2")
-		filer=seaweedfs_filer_"$filer2":8888,seaweedfs_filer_"$filer1":8888,seaweedfs_filer_"$filer3":8888
-		;;
-	"$filer3")
-		filer=seaweedfs_filer_"$filer3":8888,seaweedfs_filer_"$filer1":8888,seaweedfs_filer_"$filer2":8888
-		;;
-	*) # default value if no filers exist on the same node
-		filer=seaweedfs_filer_"$filer2":8888,seaweedfs_filer_"$filer3":8888,seaweedfs_filer_"$filer1":8888
-		;;
-esac
+filer=seaweedfs_filer:8888
 
 trap 'cleanup' INT TERM
 

@@ -12,20 +12,6 @@ configs:
   volume:
     file: ./volume.sh
 
-x-filer: &filer
-  image: chrislusf/seaweedfs:latest
-  environment:
-    - HOST={{.Node.Hostname}}
-  entrypoint: /filer.sh
-  networks:
-    - seaweedfs
-  volumes:
-    - /mnt/seaweedfs/seaweedfs/filer:/data/filerdb
-  configs:
-    - source: filer
-      target: /filer.sh
-      mode: 755
-
 x-volume: &volume
   image: chrislusf/seaweedfs:latest
   environment:
@@ -41,6 +27,29 @@ x-volume: &volume
       mode: 755
 
 services:
+  cron: 
+    image: chrislusf/seaweedfs:latest
+    networks:
+      - seaweedfs
+    environment:
+      SHELL_MASTER: seaweedfs_master:9333
+    volumes:
+      - /mnt/seaweedfs/seaweedfs/metabackup:/data
+    command: 
+      - "shell"
+      - "lock;"
+      - "volume.deleteEmpty -quietFor=24h -force;"
+      - "volume.balance -force;"
+      - "volume.fix.replication;"
+      - "unlock"
+    deploy:
+      restart_policy:
+        condition: none
+      labels: 
+        - swarm.cronjob.enable=true
+        - swarm.cronjob.schedule=0 10 * * *
+        - swarm.cronjob.skip-running=true
+
   master:
     image: chrislusf/seaweedfs:latest
     command: 
@@ -78,47 +87,19 @@ services:
     deploy:
       mode: global
 
-  cron: 
+  filer:
     image: chrislusf/seaweedfs:latest
+    environment:
+      - HOST={{.Node.Hostname}}
+    entrypoint: /filer.sh
     networks:
       - seaweedfs
-    environment:
-      SHELL_MASTER: seaweedfs_master:9333
     volumes:
-      - /mnt/seaweedfs/seaweedfs/metabackup:/data
-    command: 
-      - "shell"
-      - "lock;"
-      - "volume.deleteEmpty -quietFor=24h -force;"
-      - "volume.balance -force;"
-      - "volume.fix.replication;"
-      - "unlock"
-    deploy:
-      restart_policy:
-        condition: none
-      labels: 
-        - swarm.cronjob.enable=true
-        - swarm.cronjob.schedule=0 3 * * *
-        - swarm.cronjob.skip-running=true
-
-  filer_tierra:
-    <<: *filer
-    deploy:
-      placement:
-        constraints:
-          - "node.hostname == tierra"
-  filer_mercurio:
-    <<: *filer
-    deploy:
-      placement:
-        constraints:
-          - "node.hostname == mercurio"
-  filer_venus:
-    <<: *filer
-    deploy:
-      placement:
-        constraints:
-          - "node.hostname == venus"
+      - /mnt/seaweedfs/seaweedfs/filer:/data/filerdb
+    configs:
+      - source: filer
+        target: /filer.sh
+        mode: 755
 
   volume_tierra:
     <<: *volume
