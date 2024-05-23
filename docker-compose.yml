@@ -55,7 +55,7 @@ services:
     command: 
       - "master"
       - "-defaultReplication=200"
-      - "-volumeSizeLimitMB=30000"
+      - "-volumeSizeLimitMB=1000"
       - "-garbageThreshold=0.01"
       - "-mdir=/data"
     networks:

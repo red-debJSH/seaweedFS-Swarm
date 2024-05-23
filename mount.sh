@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cch=/mnt/cch
-mnt=/mnt/cld
+mnt=/mnt/services
 cnt_name=seaweedfs_mount_"$HOST"
 filer=seaweedfs_filer:8888
 
