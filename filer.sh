@@ -5,7 +5,7 @@ volume_hosts="tierra mercurio venus"
 if [ "${volume_hosts#*"$HOST"}" != "$volume_hosts" ]; then
 	dc=$HOST
 else
-	dc=tierra # default value if no volume server exists on the same node
+	dc=mercurio # default value if no volume server exists on the same node
 fi
 
 cat > /etc/seaweedfs/filer.toml <<- EOF
@@ -17,5 +17,5 @@ EOF
 weed filer \
 	-master=seaweedfs_master:9333 \
 	-ip.bind=0.0.0.0 \
-	-ip=seaweedfs_filer \
-	-dataCenter="$dc"
+	-ip=seaweedfs_filer_"$HOST" \
+	-dataCenter="$dc"  
