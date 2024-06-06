@@ -89,7 +89,6 @@ services:
     command: 
       - "shell"
       - "lock;"
-      - "volume.deleteEmpty -quietFor=24h -force;"
       - "volume.balance -force;"
       - "volume.fix.replication;"
       - "unlock"
