@@ -18,6 +18,9 @@ services:
     deploy:
       restart_policy:
         condition: none
+      placement:
+        constraints:
+          - "node.hostname == tierra"
 
 networks:
   seaweedfs:
