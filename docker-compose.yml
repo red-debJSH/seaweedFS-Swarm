@@ -13,7 +13,7 @@ configs:
     file: ./volume.sh
 
 x-filer: &filer
-  image: chrislusf/seaweedfs:latest
+  image: chrislusf/seaweedfs:3.67
   environment:
     - HOST={{.Node.Hostname}}
   entrypoint: /filer.sh
@@ -27,7 +27,7 @@ x-filer: &filer
       mode: 755
 
 x-volume: &volume
-  image: chrislusf/seaweedfs:latest
+  image: chrislusf/seaweedfs:3.67
   environment:
     - HOST={{.Node.Hostname}}
   entrypoint: /volume.sh
@@ -42,7 +42,7 @@ x-volume: &volume
 
 services:
   master:
-    image: chrislusf/seaweedfs:latest
+    image: chrislusf/seaweedfs:3.67
     command: 
       - "master"
       - "-defaultReplication=200"
@@ -79,7 +79,7 @@ services:
       mode: global
 
   cron: 
-    image: chrislusf/seaweedfs:latest
+    image: chrislusf/seaweedfs:3.67
     networks:
       - seaweedfs
     environment:

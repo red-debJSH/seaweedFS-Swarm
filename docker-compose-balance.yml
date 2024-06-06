@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   balance:
-    image: chrislusf/seaweedfs:latest
+    image: chrislusf/seaweedfs:3.67
     networks:
       - seaweedfs
     environment:
@@ -11,16 +11,12 @@ services:
     command: 
       - "shell"
       - "lock;"
-      - "volume.deleteEmpty -quietFor=24h -force;"
       - "volume.balance -force;"
       - "volume.fix.replication;"
       - "unlock"
     deploy:
       restart_policy:
         condition: none
-      placement:
-        constraints:
-          - "node.hostname == tierra"
 
 networks:
   seaweedfs:
